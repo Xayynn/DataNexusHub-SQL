@@ -1,0 +1,118 @@
+
+/* T-SQL scripts to create a database named SchoolManagementSystem:
+*/ 
+
+CREATE DATABASE SchoolManagementSystem;
+
+
+/*tables to store student information, course details,and student enrolment data.
+*/
+USE SchoolManagementSystem; 
+
+CREATE TABLE Students (
+    StudentID INT PRIMARY KEY,
+    StudentName VARCHAR(50),
+    GradeLevel INT
+); 
+
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(50)
+); 
+
+CREATE TABLE Enrolments (
+    EnrollmentID INT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+); 
+
+/*Populating the tables
+*/ 
+
+USE SchoolManagementSystem; 
+
+INSERT INTO Students (StudentID, StudentName, GradeLevel)
+VALUES (1, 'Aliyu Aliyu', 10),
+       (2, 'Victor Olagunju', 11),
+       (3, 'Olamilekan Lawal', 10),
+       (4, 'Peace Success', 12),
+       (5, 'Tunji', 9),
+       (6, 'Gift Abuh', 11),
+       (7, 'Amrstrong', 9),
+       (8, 'Olivia Lee', 10),
+       (9, 'Matthew Taylor', 11),
+       (10, 'Emma Anderson', 10); 
+
+INSERT INTO Courses (CourseID, CourseName)
+VALUES (1, 'Mathematics'),
+       (2, 'English'),
+       (3, 'Science'),
+       (4, 'History'); 
+
+INSERT INTO Enrolments (EnrollmentID, StudentID, CourseID)
+VALUES (1, 1, 1),
+       (2, 2, 2),
+       (3, 3, 1),
+       (4, 4, 3),
+       (5, 5, 1),
+       (6, 6, 3),
+       (7, 7, 2),
+       (8, 8, 1),
+       (9, 9, 4),
+       (10, 10, 1);
+
+
+/*modifying student information and course removal.
+*/ 
+
+USE SchoolManagementSystem; 
+
+-- Update student information
+UPDATE Students
+SET StudentName = 'John Smith'
+WHERE StudentID = 1; 
+
+-- Remove a course
+DELETE FROM Courses
+WHERE CourseID = 4;
+
+
+/*List all students.
+*/ 
+
+USE SchoolManagementSystem; 
+
+SELECT *
+FROM Students;
+
+
+/*Filtering students based on grade level.
+*/ 
+
+USE SchoolManagementSystem; 
+
+SELECT *
+FROM Students
+WHERE GradeLevel = 10; 
+
+/*List courses along with the number of enrolled students per course */
+
+
+USE SchoolManagementSystem; 
+
+SELECT C.CourseID, C.CourseName, COUNT(E.EnrollmentID) AS EnrolledStudents
+FROM Courses C
+LEFT JOIN Enrolments E ON C.CourseID = E.CourseID
+GROUP BY C.CourseID, C.CourseName; 
+
+/*students enrolled in a specific course.
+*/ 
+
+USE SchoolManagementSystem; 
+
+SELECT S.StudentID, S.StudentName
+FROM Students S
+JOIN Enrolments E ON S.StudentID = E.StudentID
+WHERE E.CourseID = 1;
